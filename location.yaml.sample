@@ -1,0 +1,10 @@
+--- !map:Location::Models::Location 
+:adr: 
+  :neighborhood: Woodland Hill
+  :country: United States
+  :state: Oklahoma
+  :city: Tulsa
+:geo: 
+  :long: -95.9104232788
+  :lat: 36.0701255798
+:date: 2009-05-20 03:35:03 -05:00
