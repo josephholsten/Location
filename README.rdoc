@@ -1,25 +1,25 @@
-#=Incompatible Location
-#Location is a web application to show off your Fire Eagle location. It lets you host it on a machine of your choosing, so you don't need to point to applications like BrightKite to let people know where you are. It marks up your location data with microformats, so it's easy to write scripts using your data.
-#
-#==Requirements
-#
-#Location depends on a few things before you get started. Make sure you have:
-#* ruby 1.8
-#* fireeagle gem
-#* camping gem
-#* an account with Fire Eagle
-#* some application to update your Fire Eagle location, like BrightKite or Dopplr
-#
-#==Configuration
-#
-#To pull your information from FireEagle, Location uses OAuth to prove you have authorized access. There are two steps to set up OAuth. First, you'll need to sign up for a consumer key at the Yahoo {Fire Eagle Developer Center}[http://fireeagle.yahoo.net/developer]. Register your app to just access the user's location, and use plugin type authentication. You can change these settings later if you want. Fire Eagle will give you a consumer key and secret. Edit the +credentials.yaml.sample+ file to have your correct credentials, and save it as +credentials.yaml+.
-#
-#Once you've got your credentials set up, go to the directory containing Location and start camping by typing:
-#  cd location
-#  camping .
-#Camping should show tell you the port it's running on, something like +0.0.0.0:3301+. Navigate to this URI in your browser. Location will direct you to authorize your application to access your Fire Eagle location. Allow it access and you should be redirected to your local instance of Location. It should show the last time and place you signed in.
-#
-#Congradulations, you're done!
-#
-#==Installation
-#With your application credentials set up, you can easily move Location to a real web server. For more information, see _why the lucky stiff's guide to putting {Camping on Shared Hosting}[http://wiki.github.com/why/camping/camping-on-shared-hosting].
+=Incompatible Location
+Location is a web application to show off your Fire Eagle location. It lets you host it on a machine of your choosing, so you don't need to point to applications like BrightKite to let people know where you are. It marks up your location data with microformats, so it's easy to write scripts using your data.
+
+==Requirements
+
+Location depends on a few things before you get started. Make sure you have:
+* ruby 1.8
+* fireeagle gem
+* camping gem
+* an account with Fire Eagle
+* some application to update your Fire Eagle location, like BrightKite or Dopplr
+
+==Configuration
+
+To pull your information from FireEagle, Location uses OAuth to prove you have authorized access. There are two steps to set up OAuth. First, you'll need to sign up for a consumer key at the Yahoo {Fire Eagle Developer Center}[http://fireeagle.yahoo.net/developer]. Register your app to just access the user's location, and use plugin type authentication. You can change these settings later if you want. Fire Eagle will give you a consumer key and secret. Edit the +credentials.yaml.sample+ file to have your correct credentials, and save it as +credentials.yaml+.
+
+Once you've got your credentials set up, go to the directory containing Location and start camping by typing:
+  cd location
+  camping .
+Camping should show tell you the port it's running on, something like +0.0.0.0:3301+. Navigate to this URI in your browser. Location will direct you to authorize your application to access your Fire Eagle location. Allow it access and you should be redirected to your local instance of Location. It should show the last time and place you signed in.
+
+Congradulations, you're done!
+
+==Installation
+With your application credentials set up, you can easily move Location to a real web server. For more information, see _why the lucky stiff's guide to putting {Camping on Shared Hosting}[http://wiki.github.com/why/camping/camping-on-shared-hosting].
