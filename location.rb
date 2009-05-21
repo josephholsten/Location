@@ -19,7 +19,7 @@ class Array
 end
 
 module Location
-	class AuthorizationError < SecurityError; end
+    class AuthorizationError < SecurityError; end
     module Models
         class PersistantHash < Hash
             require 'yaml'
@@ -47,13 +47,13 @@ module Location
             def initialize(filepath = nil)
                 super(filepath || 'location.yaml')
             end
-			def self.get_current
-				self.new.get_current
-			end
-			def get_current
-				locations = FireEagleService.get_locations
-				update_from_locations(locations)
-			end
+            def self.get_current
+                self.new.get_current
+            end
+            def get_current
+                locations = FireEagleService.get_locations
+                update_from_locations(locations)
+            end
             def update_from_locations(locations)
                 clear
                 merge!(from_fire_eagle(locations))
@@ -109,45 +109,47 @@ module Location
         class FireEagleService
             # handle access to fire eagle service
             require 'fireeagle'
-			attr_accessor :cred
+            attr_accessor :cred
             def initialize
                 @cred = Credentials.load
                 @client = FireEagle::Client.new(@cred)
             end
             def self.get_locations
-				self.new.locations
+                self.new.locations
             end
-			def self.update
-				self.new.update
-			end
-			def locations
-				begin
-					@client.user.locations
-				rescue FireEagle::ArgumentError, FireEagle::FireEagleException
-					update_authorization
-				# FireEagle::ArgumentError
-				#   no access_token, access_token_secret
+            def self.update
+                self.new.update
+            end
+            def locations
+                begin
+                    @client.user.locations
+                rescue FireEagle::ArgumentError, FireEagle::FireEagleException
+                    update_authorization
+                    @client.user.locations
+                # FireEagle::ArgumentError
+                #   no access_token, access_token_secret
                 # can't recover from FireEagle::FireEagleException here
-				#   invalid sig: bad a_token_sec, consumer_sec
-				#   token not found: bad a_token
-				#   unknown consumer key: bad consumer_key
-				#   Token not found: no access_token
-				end
-			end
-			def request_authorization
-				begin
-					@cred.clear_request
-					resp = @client.get_request_token
-					@cred.update_request_token(resp)
-					@cred.save
-				rescue OAuth::Unauthorized
-					raise Location::AuthorizationError, "Bad consumer key"
-				end
-					
-			end
-			def authorization_url
-				@client.authorization_url
-			end
+                #   invalid sig: bad a_token_sec, consumer_sec
+                #   token not found: bad a_token
+                #   unknown consumer key: bad consumer_key
+                #   Token not found: no access_token
+                end
+            end
+            def request_authorization
+                begin
+                    @cred.clear_request
+                    resp = @client.get_request_token
+                    @cred.update_request_token(resp)
+                    @cred.save
+                rescue OAuth::Unauthorized
+                    raise Location::AuthorizationError, "Bad consumer key"
+                end
+            end
+            def authorization_url(callback_url=nil)
+                require 'cgi'
+                callback_query = callback_url.nil? ? "" : "&oauth_callback="+CGI.escape(callback_url)
+                @client.authorization_url + callback_query
+            end
             def update_authorization
                 resp = @client.convert_to_access_token
                 @cred.update_access_token(resp)
@@ -158,21 +160,19 @@ module Location
     end
 
     module Controllers
-        class Index
+        class Index < R '/'
             def get
-				begin
-					@location = Location.get_current
-				rescue FireEagle::ArgumentError, FireEagle::FireEagleException
-					svc = FireEagleService.new
-					svc.request_authorization
-					redirect svc.authorization_url
-				end
-				render :index
-            end
-        end
-        class Authentication
-            def get
-                redirect Index
+                begin
+                    @location = Location.get_current
+                rescue FireEagle::ArgumentError, FireEagle::FireEagleException, OAuth::Unauthorized
+                    svc = FireEagleService.new
+                    svc.request_authorization
+                    url = URL(Index)
+                    url.scheme ||= 'http'
+                    redirect svc.authorization_url(url.to_s)
+                else
+                    render :index
+                end
             end
         end
     end
@@ -182,7 +182,7 @@ module Location
             html do
                 head do
                     title 'Location'
-                    link :rel => 'stylesheet', :type => 'text/css', 
+                    link :rel => 'stylesheet', :type => 'text/css',
                     :href => '/styles.css', :media => 'screen'
                 end
                 body do
@@ -194,30 +194,30 @@ module Location
             end
         end
         def index
-			_adr(@location[:adr])
-			_geo(@location[:geo])
-_date(@location[:date])
+            _adr(@location[:adr])
+            _geo(@location[:geo])
+            _date(@location[:date])
         end
-		def _adr(adr)
-			div.adr do
-				text adr[:neighborhood]
-				text ", "
-				span.locality {adr[:city]}
-				text ", "
-				span.region adr[:state]
-				text ", "
-				span.country_name adr[:country]
-			end
-		end
-		def _geo(geo)
+        def _adr(adr)
+            div.adr do
+                text adr[:neighborhood]
+                text ", "
+                span.locality {adr[:city]}
+                text ", "
+                span.region adr[:state]
+                text ", "
+                span.country_name adr[:country]
+            end
+        end
+        def _geo(geo)
             div.geo do
-				span.latitude geo[:lat]
-				text ", "
-				span.longitude geo[:long]
-			end
-		end
-		def _date(date)
-			abbr.dtstarted date.to_date.to_s(:long), :title => date.iso8601
-		end
+                span.latitude geo[:lat]
+                text ", "
+                span.longitude geo[:long]
+            end
+        end
+        def _date(date)
+            abbr.dtstarted date.to_date.to_s(:long), :title => date.iso8601
+        end
     end
 end
