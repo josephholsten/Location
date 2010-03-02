@@ -1,0 +1,22 @@
+<html>
+  <head>
+    <title>Location</title>
+    <link rel='stylesheet' type='text/css' href='/styles.css' media='screen' />
+  </head>
+  <body>
+    <h1><a href='/'>Location</a></h1>
+    <div class="wrapper">
+      <div class='adr'>
+        <%= @location[:adr][:neighborhood] %>,
+        <span class='locality'><%= @location[:adr][:city] %></span>,
+        <span class='region'><%= @location[:adr][:state] %></span>,
+        <span class='country_name'><%= @location[:adr][:country] %></span>
+      </div>
+      <div class='geo'>
+        <span class='latitude'><%= @location[:geo][:lat] %></span>,
+        <span class='longitude'><%= @location[:geo][:long] %></span>
+      </div>
+      <abbr class="dtstarted" title='<%= @location[:date].iso8601%>'><%= @location[:date].to_date.to_s(:long) %></abbr>
+    </div>
+  </body>
+</html>

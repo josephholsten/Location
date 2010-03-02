@@ -5,10 +5,9 @@ Location is a web application to show off your Fire Eagle location. It lets you 
 
 Location depends on a few things before you get started. Make sure you have:
 * ruby 1.8
-* fireeagle gem
-* camping gem
+* bundler gem
 * an account with Fire Eagle
-* some application to update your Fire Eagle location, like BrightKite or Dopplr
+* some application to update your Fire Eagle location, like BrightKite, Dopplr, or Clarke
 
 ==Configuration
 
@@ -16,10 +15,11 @@ To pull your information from FireEagle, Location uses OAuth to prove you have a
 
 Once you've got your credentials set up, go to the directory containing Location and start camping by typing:
   cd location
-  camping .
-Camping should show tell you the port it's running on, something like +0.0.0.0:3301+. Navigate to this URI in your browser. Location will direct you to authorize your application to access your Fire Eagle location. Allow it access and you should be redirected to your local instance of Location. It should show the last time and place you signed in.
+  bundle install
+  bundle exec rackup config.ru
+Sinatra should show tell you the port it's running on, something like +0.0.0.0:3301+. Navigate to this URI in your browser. Location will direct you to authorize your application to access your Fire Eagle location. Allow it access and you should be redirected to your local instance of Location. It should show the last time and place you signed in.
 
-Congradulations, you're done!
+Congratulations, you're done!
 
 ==Installation
-With your application credentials set up, you can easily move Location to a real web server. For more information, see _why the lucky stiff's guide to putting {Camping on Shared Hosting}[http://wiki.github.com/why/camping/camping-on-shared-hosting].
+With your application credentials set up, you can easily move Location to a real web server. Any hosting with rack support should be fine.
