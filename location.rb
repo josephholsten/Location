@@ -15,6 +15,8 @@ end
 require 'sinatra'
 require 'active_support/time'
 
+set :views, File.dirname(__FILE__) + '/views' # FIXME: why doesn't the default work with bundler?
+
 class Array
     def merge
         self.inject({}) do |hash, item|
@@ -117,7 +119,8 @@ end
 class FireEagleService
     # handle access to fire eagle service
     require 'fireeagle'
-    attr_accessor :credentials, :callback_url
+    attr_writer :credentials
+    attr_accessor :callback_url
     def initialize
         @callback_url = nil
     end
