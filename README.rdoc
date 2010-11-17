@@ -11,13 +11,13 @@ Location depends on a few things before you get started. Make sure you have:
 
 ==Configuration
 
-To pull your information from FireEagle, Location uses OAuth to prove you have authorized access. There are two steps to set up OAuth. First, you'll need to sign up for a consumer key at the Yahoo {Fire Eagle Developer Center}[http://fireeagle.yahoo.net/developer]. Register your app to just access the user's location, and use plugin type authentication. You can change these settings later if you want. Fire Eagle will give you a consumer key and secret. Edit the +credentials.yaml.sample+ file to have your correct credentials, and save it as +credentials.yaml+.
+To pull your information from FireEagle, Location uses OAuth to prove you have authorized access. There are two steps to set up OAuth. First, you'll need to sign up for a consumer key at the Yahoo {Fire Eagle Developer Center}[http://fireeagle.yahoo.net/developer]. Register your app to just access the user's location, and use plugin type authentication. You can change these settings later if you want. Fire Eagle will give you a consumer key and secret. You'll be asked to enter them the first time you run the app.
 
-Once you've got your credentials set up, go to the directory containing Location and start camping by typing:
+Once you've got your credentials set up, go to the directory containing Location and start the app by typing:
   cd location
   bundle install
   bundle exec rackup config.ru
-Sinatra should show tell you the port it's running on, something like +0.0.0.0:3301+. Navigate to this URI in your browser. Location will direct you to authorize your application to access your Fire Eagle location. Allow it access and you should be redirected to your local instance of Location. It should show the last time and place you signed in.
+Sinatra should show tell you the port it's running on, something like +http://localhost:4567+. Navigate to this URI in your browser. Location will direct you to authorize your application to access your Fire Eagle location. Allow it access and you should be redirected to your local instance of Location. It should show the last time and place you signed in.
 
 Congratulations, you're done!
 

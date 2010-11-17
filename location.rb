@@ -6,6 +6,12 @@
 # plays nice with Fire Eagle
 # provides a simple way for systems to get current location
 
+# FIXME: hack to fix oauth
+module OAuth
+  VERSION = "0.4.4"
+end
+# end FIXME
+
 require 'sinatra'
 require 'active_support/time'
 
@@ -27,8 +33,12 @@ class PersistantHash < Hash
         p = self.new(filepath)
         p.load
     end
+    def exists?
+      File.exists? @filepath
+    end
     def load
         stored = YAML.load_file @filepath
+        raise "Looks like your yaml file couldn't load: #{@filepath}" unless stored
         clear
         merge!(stored)
     end
@@ -107,10 +117,15 @@ end
 class FireEagleService
     # handle access to fire eagle service
     require 'fireeagle'
-    attr_accessor :cred
+    attr_accessor :credentials, :callback_url
     def initialize
-        @cred = Credentials.load
-        @client = FireEagle::Client.new(@cred)
+        @callback_url = nil
+    end
+    def credentials
+        @cred ||= Credentials.load
+    end
+    def client
+        @client ||= FireEagle::Client.new(credentials)
     end
     def self.get_locations
         self.new.locations
@@ -119,33 +134,39 @@ class FireEagleService
         self.new.update
     end
     def locations
-        @client.user.locations
+        client.user.locations
     end
-    def request_authorization(callback_url='')
+    def has_credentials?
+        Credentials.new.exists?
+    end
+    def request_authorization
         begin
-            @cred.clear_request
-            @client = FireEagle::Client.new(@cred)
+            credentials.clear_request
+            @client = FireEagle::Client.new(credentials)
             resp = @client.get_request_token(callback_url)
-            @cred.update_request_token(resp)
-            @cred.save
+            credentials.update_request_token(resp)
+            credentials.save
         rescue OAuth::Unauthorized
-            raise Location::AuthorizationError, "Bad consumer key"
+            raise InvalidCredentials
         end
     end
-    def authorization_url(callback_url=nil)
+    def authorization_url
         require 'cgi'
         callback_query = callback_url.nil? ? "" : "&oauth_callback="+CGI.escape(callback_url)
-        @client.authorization_url + callback_query
+        client.authorization_url + callback_query
     end
     def update_authorization(oauth_verifier)
-        resp = @client.convert_to_access_token(oauth_verifier)
-        @cred.update_access_token(resp)
-        @cred.clear_request
-        @cred.save
+        resp = client.convert_to_access_token(oauth_verifier)
+        credentials.update_access_token(resp)
+        credentials.clear_request
+        credentials.save
     end
 end
 
+class InvalidCredentials < Exception; end
+
 get '/' do
+  redirect '/credentials' unless FireEagleService.new.has_credentials?
   begin
     if params[:oauth_verifier]
       svc = FireEagleService.new
@@ -156,10 +177,34 @@ get '/' do
     svc = FireEagleService.new
     url = 'http://' + Sinatra::Application.host
     url += ":#{Sinatra::Application.port}" unless Sinatra::Application.port == 80
-    svc.request_authorization(url)
+    svc.callback_url = url
+    begin
+      svc.request_authorization
+    rescue InvalidCredentials
+      redirect '/credentials'
+    end
     auth_url = svc.authorization_url
     redirect auth_url
   else
     erb :index
   end
+end
+
+get '/credentials' do
+  begin
+    @credentials = Credentials.load
+    @flash = "Looks like these credentials didn't work. Care to double check them?"
+  rescue
+    @credentials = Credentials.new
+    @flash = "Looks like you haven't got your credentials set up. Head over to fire eagle and enter them below."
+  end
+  erb :first_run
+end
+
+post '/credentials' do
+  credentials = Credentials.new
+  credentials[:consumer_key] = params['consumer_key']
+  credentials[:consumer_secret] = params['consumer_secret']
+  credentials.save
+  redirect '/'
 end

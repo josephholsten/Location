@@ -1,0 +1,18 @@
+<html>
+  <head>
+    <title>Location</title>
+    <link rel='stylesheet' type='text/css' href='/styles.css' media='screen' />
+  </head>
+  <body>
+    <h1><a href='/'>Location</a></h1>
+    <p><%= @flash %></p>
+    <p><a href="http://fireeagle.yahoo.net/developer/manage">http://fireeagle.yahoo.net/developer/manage</a></p>
+    <form action="/credentials" method="post">
+      <dl>
+        <dt><label>Consumer Key</label></dt><dd><input name="consumer_key" value="<%= @credentials[:consumer_key] %>"/></dd>
+        <dt><label>Consumer Secret</label></dt><dd><input name="consumer_secret" value="<%= @credentials[:consumer_secret] %>"/></dd>
+      </dl>
+      <input type="submit" name="submit"  value="submit"/>
+    </form>
+  </body>
+</html>
