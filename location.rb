@@ -16,6 +16,7 @@ require 'sinatra'
 require 'active_support/time'
 
 set :views, File.dirname(__FILE__) + '/views' # FIXME: why doesn't the default work with bundler?
+enable :logging
 
 class Array
     def merge
@@ -84,9 +85,10 @@ class Location < PersistantHash
         end
     end
     def get_name_by_level(locations, level)
-        locations.find {|l|
-            l.level_name == level.to_s
-        }.normal_name
+        loc = locations.find {|l|
+            l.level_name.to_s == level.to_s
+        }
+        loc.normal_name if loc
     end
     def get_geo(location)
         geo = location.geo
