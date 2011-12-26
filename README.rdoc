@@ -21,5 +21,10 @@ Sinatra should show tell you the port it's running on, something like +http://lo
 
 Congratulations, you're done!
 
+(actually, you may want to set simplegeo support too. Use the environment variables SIMPLEGEO_KEY and SIMPLEGEO_SECRET)
+
 ==Installation
 With your application credentials set up, you can easily move Location to a real web server. Any hosting with rack support should be fine.
+
+
+

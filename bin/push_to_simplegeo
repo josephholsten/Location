@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+require 'simplegeo'
+require 'location'
+
+SimpleGeo::Client.debug = true
+SimpleGeo::Client.set_credentials
+
+location = Location.get_current
+
+puts location.inspect
+
+record = SimpleGeo::Record.new({
+  :id => 'josephholsten-fireeagle',
+  :lat => location[:geo][:lat],
+  :lon => location[:geo][:long],
+  :layer => 'com.josephholsten.location'
+})
+
+SimpleGeo::Client.add_record(record)
