@@ -20,6 +20,7 @@ puts location.inspect
 
 record = SimpleGeo::Record.new({
   :id => 'josephholsten-fireeagle',
+  :created => location[:date],
   :lat => location[:geo][:lat],
   :lon => location[:geo][:long],
   :layer => 'com.josephholsten.location'
