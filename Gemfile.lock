@@ -20,7 +20,7 @@ GEM
     json_pure (1.6.4)
     libxml-ruby (1.1.4)
     oauth (0.4.4)
-    rack (1.2.1)
+    rack (1.6.12)
     simplegeo (0.5.3)
       json_pure
       oauth (>= 0.4.0)
