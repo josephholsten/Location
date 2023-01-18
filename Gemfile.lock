@@ -11,7 +11,8 @@ GEM
   remote: http://rubygems.org/
   specs:
     GeoRuby (1.3.4)
-    activesupport (3.0.3)
+    activesupport (3.1.12)
+      multi_json (~> 1.0)
     daemons (1.1.5)
     eventmachine (0.12.10)
     happymapper (0.3.2)
@@ -19,6 +20,7 @@ GEM
     i18n (0.4.2)
     json_pure (1.6.4)
     libxml-ruby (1.1.4)
+    multi_json (1.15.0)
     oauth (0.4.4)
     rack (1.6.12)
     simplegeo (0.5.3)
@@ -37,7 +39,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activesupport (~> 3.0.3)
+  activesupport (~> 3.1.12)
   fireeagle!
   i18n (~> 0.4.2)
   simplegeo (~> 0.5.3)
